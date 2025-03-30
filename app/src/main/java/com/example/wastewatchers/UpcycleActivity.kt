@@ -150,7 +150,7 @@ class UpcycleActivity : AppCompatActivity() {
 
     fun classifyImageWithHuggingFace(imageFile: File) {
         val client = OkHttpClient.Builder().callTimeout(60, TimeUnit.SECONDS).build()
-        val token = BuildConfig.HF_API_KEY
+        val token = "INSERT-TOKEN-HERE"
 
         val requestBody = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val request = Request.Builder()
@@ -203,7 +203,7 @@ class UpcycleActivity : AppCompatActivity() {
 
     fun sendToOpenAI(prompt: String, onResult: (String) -> Unit) {
         val client = OkHttpClient()
-        val apiKey = BuildConfig.OPENAI_API_KEY
+        val apiKey = "INSERT-API-KEY-HERE"
         val requestBody = """
             {
                 "model": "gpt-4o-mini",

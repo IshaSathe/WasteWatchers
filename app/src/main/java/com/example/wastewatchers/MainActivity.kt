@@ -21,7 +21,9 @@ class MainActivity : AppCompatActivity() {
 
         val button_to_recycle = findViewById<Button>(R.id.button_to_recycle)
         val button_to_upcycle = findViewById<Button>(R.id.button_to_upcycle)
+        val button_to_fresh = findViewById<Button>(R.id.button_to_fresh)
         val button_to_impact = findViewById<Button>(R.id.button_to_impact)
+
 
         button_to_recycle.setOnClickListener {
             val intent = Intent(this, RecycleActivity::class.java)
@@ -30,6 +32,11 @@ class MainActivity : AppCompatActivity() {
 
         button_to_upcycle.setOnClickListener {
             val intent = Intent(this, UpcycleActivity::class.java)
+            startActivity(intent)
+        }
+
+        button_to_fresh.setOnClickListener {
+            val intent = Intent(this, FreshActivity::class.java)
             startActivity(intent)
         }
 

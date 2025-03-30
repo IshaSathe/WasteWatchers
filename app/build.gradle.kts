@@ -17,7 +17,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY")}\"")
-        buildConfigField("String", "HF_API_KEY", "\"${project.findProperty("HF_API_KEY")}\"")
+        buildConfigField("String", "HF_API_KEY", "\"${project.findProperty("HF_API_KEY") ?: ""}\"")
+
     }
 
     buildFeatures {

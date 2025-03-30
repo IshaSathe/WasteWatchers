@@ -5,6 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FreshActivity">
+    tools:context=".FreshActivity"
+    android:background="@drawable/fresh">
+
+    <Button
+        android:id="@+id/button_to_home"
+        android:layout_width="81dp"
+        android:layout_height="41dp"
+        android:text=""
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.018"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <CheckBox
+        android:id="@+id/checkbox_item"
+        android:layout_width="-1dp"
+        android:layout_height="wrap_content"
+        android:text="Sample Grocery Item - 2024-03-30"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.385"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.39" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

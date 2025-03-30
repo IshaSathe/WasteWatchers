@@ -244,7 +244,7 @@ class RecycleActivity : AppCompatActivity() {
 
     fun classifyImageWithHuggingFace(imageFile: File) {
         val client = OkHttpClient.Builder().callTimeout(60, TimeUnit.SECONDS).build()
-        val token = BuildConfig.HF_API_KEY
+        val token = "INSERT-TOKEN-HERE"
 
         val requestBody = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val request = Request.Builder()
@@ -263,6 +263,9 @@ class RecycleActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
+                Log.d("RecycleActivity", "Hugging Face Response Code: ${response.code}")
+                Log.d("RecycleActivity", "Hugging Face Body: $body")
+
                 if (response.isSuccessful && body != null) {
                     val predictions = JSONArray(body)
                     val top = predictions.getJSONObject(0)
@@ -282,7 +285,7 @@ class RecycleActivity : AppCompatActivity() {
 
     fun sendToOpenAI(prompt: String, onResult: (String) -> Unit) {
         val client = OkHttpClient()
-        val apiKey = BuildConfig.OPENAI_API_KEY
+        val apiKey = "INSERT-API-KEY"
         val requestBody = """
             {
                 "model": "gpt-4o-mini",
