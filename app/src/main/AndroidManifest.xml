@@ -15,16 +15,15 @@
         <activity
             android:name=".RecycleActivity"
             android:exported="false" />
-        <!-- Make SplashActivity the launcher -->
         <activity
             android:name=".SplashActivity"
-            android:exported="true"> <!-- must be true if it's a launcher -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Main activity (now launched after splash) -->
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" />
