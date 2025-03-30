@@ -1,12 +1,10 @@
 package com.example.wastewatchers
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.location.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -30,32 +27,26 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-
-class RecycleActivity : AppCompatActivity() {
+class UpcycleActivity : AppCompatActivity() {
 
     private val CAMERA_REQUEST_CODE = 100
     private val GALLERY_REQUEST_CODE = 101
     private val CAMERA_PERMISSION_CODE = 1001
-    private val LOCATION_PERMISSION_CODE = 2001
     private lateinit var imageUri: Uri
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var classifiedLabel: String = ""
     private lateinit var responseTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_recycle)
+        setContentView(R.layout.activity_upcycle)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val buttonToHome = findViewById<Button>(R.id.button_to_home)
         val buttonTakePhoto = findViewById<Button>(R.id.button_take_photo)
@@ -75,85 +66,6 @@ class RecycleActivity : AppCompatActivity() {
 
         buttonUploadPhoto.setOnClickListener {
             openGallery()
-        }
-    }
-
-    private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_CODE
-            )
-        } else {
-            getUserLocation()
-        }
-    }
-
-    private fun getUserLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        responseTextView.text = "Getting your location..."
-
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                handleLocation(location.latitude, location.longitude)
-            } else {
-                requestFreshLocation { lat, lon ->
-                    handleLocation(lat, lon)
-                }
-            }
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun requestFreshLocation(onLocationReady: (Double, Double) -> Unit) {
-        val locationRequest = LocationRequest.create().apply {
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 1000
-            numUpdates = 1
-        }
-
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            object : LocationCallback() {
-                override fun onLocationResult(result: LocationResult) {
-                    val location = result.lastLocation
-                    if (location != null) {
-                        onLocationReady(location.latitude, location.longitude)
-                    } else {
-                        Toast.makeText(this@RecycleActivity, "Still couldn't get location", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-            mainLooper
-        )
-    }
-
-    private fun handleLocation(lat: Double, lon: Double) {
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(lat, lon, 1)
-        val city = addresses?.get(0)?.locality ?: "Unknown City"
-        val state = addresses?.get(0)?.adminArea ?: "Unknown State"
-
-        val prompt = "I have $classifiedLabel and I live in $city, $state. How can I recycle this item? Keep it short."
-        Log.d("RecycleActivity", "Prompt: $prompt")
-
-        runOnUiThread {
-            responseTextView.text = "Thinking..."
-        }
-
-        sendToOpenAI(prompt) { answer ->
-            runOnUiThread {
-                Log.d("RecycleActivity", "OpenAI response: $answer")
-                responseTextView.text = answer
-            }
         }
     }
 
@@ -177,13 +89,7 @@ class RecycleActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == LOCATION_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getUserLocation()
-            } else {
-                Toast.makeText(this, "Location permission is required", Toast.LENGTH_SHORT).show()
-            }
-        } else if (requestCode == CAMERA_PERMISSION_CODE) {
+        if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera()
             } else {
@@ -215,7 +121,7 @@ class RecycleActivity : AppCompatActivity() {
             }
             tempFile
         } catch (e: Exception) {
-            Log.e("RecycleActivity", "Failed to convert URI to file: ${e.message}")
+            Log.e("UpcycleActivity", "Failed to convert URI to file: ${e.message}")
             throw e
         }
     }
@@ -257,7 +163,7 @@ class RecycleActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 runOnUiThread {
-                    Toast.makeText(this@RecycleActivity, "Hugging Face error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@UpcycleActivity, "Hugging Face error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -268,16 +174,31 @@ class RecycleActivity : AppCompatActivity() {
                     val top = predictions.getJSONObject(0)
                     classifiedLabel = top.getString("label")
                     runOnUiThread {
-                        Toast.makeText(this@RecycleActivity, "Classified: $classifiedLabel", Toast.LENGTH_SHORT).show()
-                        checkLocationPermission()
+                        Toast.makeText(this@UpcycleActivity, "Classified: $classifiedLabel", Toast.LENGTH_SHORT).show()
+                        generateUpcyclingTip()
                     }
                 } else {
                     runOnUiThread {
-                        Toast.makeText(this@RecycleActivity, "Classification failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@UpcycleActivity, "Classification failed", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
+    }
+
+    private fun generateUpcyclingTip() {
+        val prompt = "I have $classifiedLabel. How can I upcycle this item? Keep it short."
+        Log.d("UpcycleActivity", "Prompt: $prompt")
+        runOnUiThread {
+            responseTextView.text = "Thinking..."
+        }
+
+        sendToOpenAI(prompt) { answer ->
+            runOnUiThread {
+                Log.d("UpcycleActivity", "OpenAI response: $answer")
+                responseTextView.text = answer
+            }
+        }
     }
 
     fun sendToOpenAI(prompt: String, onResult: (String) -> Unit) {

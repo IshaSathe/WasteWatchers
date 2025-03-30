@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RecycleActivity"
-    android:background="@drawable/recycle">
+    android:background="@drawable/upcycle">
 
     <Button
         android:id="@+id/button_take_photo"

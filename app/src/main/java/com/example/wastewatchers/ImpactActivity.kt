@@ -8,33 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
+class ImpactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_impact)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val button_to_recycle = findViewById<Button>(R.id.button_to_recycle)
-        val button_to_upcycle = findViewById<Button>(R.id.button_to_upcycle)
-        val button_to_impact = findViewById<Button>(R.id.button_to_impact)
+        val buttonToHome = findViewById<Button>(R.id.button_to_home)
 
-        button_to_recycle.setOnClickListener {
-            val intent = Intent(this, RecycleActivity::class.java)
-            startActivity(intent)
-        }
-
-        button_to_upcycle.setOnClickListener {
-            val intent = Intent(this, UpcycleActivity::class.java)
-            startActivity(intent)
-        }
-
-        button_to_impact.setOnClickListener {
-            val intent = Intent(this, ImpactActivity::class.java)
+        buttonToHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }

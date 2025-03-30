@@ -20,4 +20,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.283" />
+
+    <Button
+        android:id="@+id/button_to_upcycle"
+        android:layout_width="184dp"
+        android:layout_height="47dp"
+        android:background="@android:color/transparent"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.403" />
+
+    <Button
+        android:id="@+id/button_to_impact"
+        android:layout_width="184dp"
+        android:layout_height="47dp"
+        android:background="@android:color/transparent"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.637" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
