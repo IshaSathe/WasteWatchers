@@ -16,5 +16,7 @@ class RecycleActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //val button_to_recycle = findViewById<>()
     }
 }
