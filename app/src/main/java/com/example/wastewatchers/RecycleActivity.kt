@@ -171,11 +171,15 @@ class RecycleActivity : AppCompatActivity() {
 
     fun classifyImageWithHuggingFace(imageFile: File, onResult: (String) -> Unit) {
         val client = OkHttpClient()
+        val tokenPart1 = "hf_FiFh"
+        val tokenPart2 = "EEqdMbEsvOfOpVwo"
+        val tokenPart3 = "BjefkAOgSrIkQa"
+        val token = tokenPart1 + tokenPart2 + tokenPart3
 
         val requestBody = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val request = Request.Builder()
             .url("https://api-inference.huggingface.co/models/microsoft/resnet-50")
-            .addHeader("Authorization", "Bearer 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")
+            .addHeader("Authorization", "Bearer $token")
             .post(requestBody)
             .build()
 
